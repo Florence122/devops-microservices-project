@@ -1,0 +1,16 @@
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\config\SecurityConfig.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\controller\TestController.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\controller\UserController.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\dto\AuthRequest.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\dto\AuthResponse.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\dto\UserRequest.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\dto\UserResponse.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\exception\ResourceNotFoundException.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\model\Role.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\model\User.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\repository\RoleRepository.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\repository\UserRepository.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\security\UserDetailsImpl.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\security\UserDetailsServiceImpl.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\service\UserService.java
+C:\Users\CAPACITI-JHB\Desktop\Kagiso Masebe\devops-microservices-project\user-service\src\main\java\com\devops\userservice\UserServiceApplication.java

@@ -1,0 +1,17 @@
+com\devops\userservice\model\Role$ERole.class
+com\devops\userservice\dto\AuthResponse.class
+com\devops\userservice\controller\UserController.class
+com\devops\userservice\config\SecurityConfig.class
+com\devops\userservice\dto\UserRequest.class
+com\devops\userservice\UserServiceApplication.class
+com\devops\userservice\repository\RoleRepository.class
+com\devops\userservice\repository\UserRepository.class
+com\devops\userservice\security\UserDetailsImpl.class
+com\devops\userservice\dto\UserResponse.class
+com\devops\userservice\model\User.class
+com\devops\userservice\exception\ResourceNotFoundException.class
+com\devops\userservice\controller\TestController.class
+com\devops\userservice\model\Role.class
+com\devops\userservice\dto\AuthRequest.class
+com\devops\userservice\security\UserDetailsServiceImpl.class
+com\devops\userservice\service\UserService.class
