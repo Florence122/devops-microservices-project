@@ -1,5 +1,10 @@
 package com.devops.orderservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import com.devops.orderservice.entity.Order;
 import com.devops.orderservice.entity.Order.OrderStatus;
 import com.devops.orderservice.service.OrderService;
@@ -14,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "Order Management", description = "APIs for managing orders")
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -21,6 +27,12 @@ import java.util.Map;
 public class OrderController {
     
     private final OrderService orderService;
+    
+    @Operation(summary = "Create a new order", description = "Creates a new order in the system")
+    @ApiResponses(value = {
+    @ApiResponse(responseCode = "201", description = "Order created successfully"),
+    @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     
     // CREATE - POST /api/orders
     @PostMapping
