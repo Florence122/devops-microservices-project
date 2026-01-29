@@ -1,66 +1,61 @@
-// src/main/java/com/devops/userservice/controller/UserController.java
 package com.devops.userservice.controller;
-
-import com.devops.userservice.dto.UserRequest;
-import com.devops.userservice.dto.UserResponse;
+import com.devops.userservice.entity.User;
 import com.devops.userservice.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
+import java.util.*;
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
-@Tag(name = "User Controller", description = "User Management APIs")
+@Slf4j
 public class UserController {
-    
-    private final UserService userService;
-    
-    @PostMapping("/register")
-    @Operation(summary = "Register a new user")
-    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRequest userRequest) {
-        UserResponse userResponse = userService.createUser(userRequest);
-        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
-    }
-    
-    @GetMapping("/{id}")
-    @Operation(summary = "Get user by ID")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
-        UserResponse userResponse = userService.getUserById(id);
-        return ResponseEntity.ok(userResponse);
-    }
-    
-    @GetMapping
-    @Operation(summary = "Get all users")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-    
-    @PutMapping("/{id}")
-    @Operation(summary = "Update user")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<UserResponse> updateUser(
-            @PathVariable Long id,
-            @Valid @RequestBody UserRequest userRequest) {
-        UserResponse userResponse = userService.updateUser(id, userRequest);
-        return ResponseEntity.ok(userResponse);
-    }
-    
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete user")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
+
+ private final UserService userService;
+
+ @PostMapping
+ public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+ User createdUser = userService.createUser(user);
+ return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+ }
+
+ @GetMapping
+ public ResponseEntity<List<User>> getAllUsers() {
+ return ResponseEntity.ok(userService.getAllUsers());
+ }
+
+ @GetMapping("/{id}")
+
+ public ResponseEntity<User> getUserById(@PathVariable Long id) {
+ return ResponseEntity.ok(userService.getUserById(id));
+ }
+
+ @GetMapping("/username/{username}")
+ public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+ return ResponseEntity.ok(userService.getUserByUsername(username));
+ }
+
+ @PutMapping("/{id}")
+ public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User user) {
+ return ResponseEntity.ok(userService.updateUser(id, user));
+ }
+
+ @DeleteMapping("/{id}")
+ public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long id) {
+ userService.deleteUser(id);
+ Map<String, String> response = new HashMap<>();
+ response.put("message", "User deleted successfully");
+ return ResponseEntity.ok(response);
+ }
+
+ @GetMapping("/health")
+ public ResponseEntity<Map<String, String>> health() {
+ Map<String, String> health = new HashMap<>();
+ health.put("status", "UP");
+ health.put("service", "user-service");
+ return ResponseEntity.ok(health);
+ }
 }

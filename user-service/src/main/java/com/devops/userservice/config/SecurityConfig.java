@@ -1,81 +1,58 @@
 package com.devops.userservice.config;
 
-import com.devops.userservice.security.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@Slf4j
 public class SecurityConfig {
     
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
-    
+    // Optionally disable security for certain paths
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+            "/api/**",
+            "/actuator/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+        );
     }
     
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService((UserDetailsService) userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-    
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
-    
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        log.info("=== Configuring Security ===");
+        
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/user-service/api/v1/auth/**").permitAll()
-                .requestMatchers("/user-service/api/v1/users/register").permitAll()
-                .requestMatchers("/user-service/swagger-ui/**", "/user-service/v3/api-docs/**").permitAll()
-                .requestMatchers("/user-service/actuator/health").permitAll()
-                .anyRequest().authenticated()
-            );
+            // Disable CSRF for API endpoints
+            .csrf(csrf -> {
+                csrf.disable();
+                log.info("CSRF protection disabled");
+            })
+            
+            // Configure authorization
+            .authorizeHttpRequests(auth -> {
+                log.info("Setting up authorization rules");
+                // Allow all requests to API and Actuator
+                auth.requestMatchers("/api/**").permitAll();
+                auth.requestMatchers("/actuator/**").permitAll();
+                auth.requestMatchers("/swagger-ui/**").permitAll();
+                auth.requestMatchers("/v3/api-docs/**").permitAll();
+                
+                // Require authentication for everything else
+                auth.anyRequest().authenticated();
+            })
+            
+            // Disable form login and basic auth popup
+            .formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable());
         
-        http.authenticationProvider(authenticationProvider());
-        
+        log.info("=== Security Configuration Complete ===");
         return http.build();
-    }
-    
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }
