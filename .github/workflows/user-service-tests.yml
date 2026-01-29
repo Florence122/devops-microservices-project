@@ -1,0 +1,48 @@
+name: User Service - Tests
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'user-service/**'
+      - '.github/workflows/user-service-tests.yml'
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'user-service/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Run User Service Tests
+        working-directory: ./user-service
+        run: mvn clean test
+      
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: user-service-test-results
+          path: user-service/target/surefire-reports/
+      
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "✅ User Service tests completed"
+          echo "Check artifacts for detailed results"

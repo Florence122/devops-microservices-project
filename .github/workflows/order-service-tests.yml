@@ -1,0 +1,48 @@
+name: Order Service - Tests
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'order-service/**'
+      - '.github/workflows/order-service-tests.yml'
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'order-service/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      
+      - name: Run Order Service Tests
+        working-directory: ./order-service
+        run: mvn clean test
+      
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: order-service-test-results
+          path: order-service/target/surefire-reports/
+      
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "✅ Order Service tests completed"
+          echo "Check artifacts for detailed results
